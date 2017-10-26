@@ -30,38 +30,40 @@ namespace MiBiblioteca
 
     public class Burocracia
     {
-        public static string NumeroALetras(int num)
+        public static string IntACardinal(int num)
         {
-            string numeritos = num.ToString();
-            int[] numDiv = new int[(numeritos.Length / 3) + (numeritos.Length % 3 != 0 ? 1 : 0)];
+            int TamannoNum = num.ToString().Length;
+            int[] numDiv = new int[(TamannoNum / 3) + (TamannoNum % 3 != 0 ? 1 : 0)];
             for (int i = 0; i < numDiv.Length; i++)
             {
                 numDiv[i] = num % 1000;
                 num = (int)num / 1000;
             }
             string sol = "";
-            Console.WriteLine(numDiv.Length);
+            bool isVacio = true;
             for (int i = 0; i < numDiv.Length; i++)
             {
-                //if (num != 0 && i != numDiv.Length - 1) sol += " ";
-                sol = NumALet(numDiv[i], i) + ExpALet(numDiv[i], i) + sol;
+                isVacio = sol.Equals("");
+                if (!isVacio) sol = " " + sol;
+                sol = NumDe3ACardinal(numDiv[i], i) + ExpALet(numDiv[i], i, numDiv.Length - 1) + sol;
             }
-            return sol + "|";
+            return sol;
         }
 
         /// <summary>
+        /// Se tienen en cuenta las Excepciones del 10 al 29;
         /// </summary>
         /// <param name="num">Numero de 3 cifras que se quiere pasar a letra</param>
         /// <param name="exp">Exponente de 100 del numero</param>
         /// <returns>Un string que contiene el resultado</returns>
-        public static string NumALet(int num, int exp)
+        public static string NumDe3ACardinal(int num, int exp)
         {
             int cent = (int)num / 100;
             int dec = (int)(num % 100) / 10;
             int uni = num % 10;
             string sol = "";
             if (num == 100) return "cien";
-            if (num == 1) return "";
+            if (num == 1 && exp != 0) return "";
             switch (cent)
             {
                 case 1: sol += "ciento"; break;
@@ -78,8 +80,22 @@ namespace MiBiblioteca
             sol += (cent != 0 && (dec > 0 || uni > 0) ? " " : "");
             switch (dec)
             {
-                case 1: sol += (uni == 0 ? "diez" : "dieci"); break;
-                case 2: sol += (uni == 0 ? "diez" : "veinti"); break;
+                case 1:
+                    switch (uni)
+                    {
+                        case 0: return sol += "diez";
+                        case 1: return sol += "once";
+                        case 2: return sol += "doce";
+                        case 3: return sol += "trece";
+                        case 4: return sol += "catorce";
+                        case 5: return sol += "quince";
+                        case 6: return sol += "dieciseis";
+                        case 7: return sol += "diecisiete";
+                        case 8: return sol += "dieciocho";
+                        case 9: return sol += "diecinueve";
+
+                    }; break;
+                case 2: sol += (uni == 0 ? "veinte" : "veinti"); break;
                 case 3: sol += "treinta" + (uni != 0 ? " y" : ""); break;
                 case 4: sol += "cuarenta" + (uni != 0 ? " y" : ""); break;
                 case 5: sol += "cincuenta" + (uni != 0 ? " y" : ""); break;
@@ -90,6 +106,7 @@ namespace MiBiblioteca
                 default: sol += ""; break;
             }
             sol += (dec != 0 && uni > 0 ? " " : "");
+            if (dec == 2 && uni > 0) sol = sol.Substring(0, sol.Length - 1);
             switch (uni)
             {
                 case 1: sol += (exp == 0 ? "uno" : "un"); break;
@@ -103,18 +120,24 @@ namespace MiBiblioteca
                 case 9: sol += "nueve"; break;
                 default: sol += ""; break;
             }
-            return sol + " ";
+            return sol;
         }
-
-        public static string ExpALet(int num, int exp)
+        /// <summary>
+        /// Se pide pasar el Numero porque es relevante a la hora de los numeros con una unidad.
+        /// </summary>
+        /// <param name="num">Numero que precede al exponente</param>
+        /// <param name="exp">Exponente de 1000</param>
+        /// <param name="maxExp">Sirve para saber si hay algo mas grande que 1000 millones</param>
+        /// <returns>Un String con el resultado</returns>
+        public static string ExpALet(int num, int exp, int maxExp)
         {
+            if (exp == 2 && maxExp == 3) return (num == 1 ? "un " : " ") + "millones";
             if (num == 0) return "";
             switch (exp)
             {
                 case 1: return (num == 1 ? "" : " ") + "mil";
-                case 2: return (num == 1 ? "un " : "") + "millon" + (num == 1 ? "" : "es");
-                case 3: return "mil millones";
-                case 4: return (num == 1 ? "un " : "") + "billon" + (num == 1 ? "" : "es");
+                case 2: return (num == 1 ? "un " : " ") + "millon" + (num == 1 ? "" : "es");
+                case 3: return (num == 1 ? "" : " ") + "mil";
                 default: return "";
             }
         }
