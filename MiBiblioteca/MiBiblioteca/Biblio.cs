@@ -141,6 +141,52 @@ namespace MiBiblioteca
                 default: return "";
             }
         }
+        static void Main(string[] args)
+        {
+            Console.WriteLine(ByteAOrdinal(47, false));
+            Console.ReadKey();
+
+        }
+        public static string ByteAOrdinal(byte num, bool isVaron)
+        {
+            byte cent = (byte)(num / 100);
+            byte dec = (byte)((num % 100) / 10);
+            byte uni = (byte)(num % 10);
+            string sol = "";
+            if (cent == 1)
+            {
+                sol += "centésim" + (isVaron ? "o" : "a");
+                sol += (dec > 0 || uni > 0 ? " " : "");
+            }
+            switch (dec)
+            {
+                case 1: sol += "décim" + (isVaron ? "o" : "a"); break;
+                case 2: sol += "vigésim" + (isVaron ? "o" : "a"); break;
+                case 3: sol += "trigésim" + (isVaron ? "o" : "a"); break;
+                case 4: sol += "cuadragésim" + (isVaron ? "o" : "a"); break;
+                case 5: sol += "quincuagésim" + (isVaron ? "o" : "a"); break;
+                case 6: sol += "sexagésim" + (isVaron ? "o" : "a"); break;
+                case 7: sol += "septuagésim" + (isVaron ? "o" : "a"); break;
+                case 8: sol += "octogésim" + (isVaron ? "o" : "a"); break;
+                case 9: sol += "nonagésim" + (isVaron ? "o" : "a"); break;
+                default: sol += ""; break;
+            }
+            sol += (dec != 0 && uni > 0 ? " " : "");
+            switch (uni)
+            {
+                case 1: sol += "primer" + (isVaron ? "o" : "a"); break;
+                case 2: sol += "segund" + (isVaron ? "o" : "a"); break;
+                case 3: sol += "tercer" + (isVaron ? "o" : "a"); break;
+                case 4: sol += "cuart" + (isVaron ? "o" : "a"); break;
+                case 5: sol += "quint" + (isVaron ? "o" : "a"); break;
+                case 6: sol += "sext" + (isVaron ? "o" : "a"); break;
+                case 7: sol += "séptim" + (isVaron ? "o" : "a"); break;
+                case 8: sol += "octav" + (isVaron ? "o" : "a"); break;
+                case 9: sol += "noven" + (isVaron ? "o" : "a"); break;
+                default: sol += ""; break;
+            }
+            return sol;
+        }
     }
 
     public class Matematicas
